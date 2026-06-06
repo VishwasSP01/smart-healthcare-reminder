@@ -22,15 +22,21 @@ class S3PrescriptionStorage {
     private final S3Presigner s3Presigner;
     private final AwsProperties properties;
     private final Duration urlTtl;
+    private final PrescriptionOcrProperties ocrProperties;
 
-    S3PrescriptionStorage(S3Client s3Client, S3Presigner s3Presigner, AwsProperties properties, Duration prescriptionUrlTtl) {
+    S3PrescriptionStorage(S3Client s3Client, S3Presigner s3Presigner, AwsProperties properties, Duration prescriptionUrlTtl, PrescriptionOcrProperties ocrProperties) {
         this.s3Client = s3Client;
         this.s3Presigner = s3Presigner;
         this.properties = properties;
         this.urlTtl = prescriptionUrlTtl;
+        this.ocrProperties = ocrProperties;
     }
 
     void upload(String key, MultipartFile file) throws IOException {
+        if ("mock".equalsIgnoreCase(ocrProperties.provider())) {
+            // Bypass S3 upload for local mock testing
+            return;
+        }
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(properties.s3Bucket())
                 .key(key)
@@ -41,6 +47,10 @@ class S3PrescriptionStorage {
     }
 
     String presignedUrl(String key) {
+        if ("mock".equalsIgnoreCase(ocrProperties.provider())) {
+            // Return a beautiful unsplash image of medicine as a mock prescription image
+            return "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800";
+        }
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(properties.s3Bucket())
                 .key(key)
