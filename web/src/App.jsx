@@ -111,10 +111,10 @@ export default function App() {
 
       setProfile(me);
       setPrescriptions(prescriptionPage.content || []);
-      setSchedules(medicineSchedules || []);
-      setReminders(medicineReminders || []);
+      setSchedules(medicineSchedules.content || []);
+      setReminders(medicineReminders.content || []);
       setDietToday(meals || []);
-      setDietReminders(mealReminders || []);
+      setDietReminders(mealReminders.content || []);
       setCompliance(dietScore);
     } catch (err) {
       setAlert({ text: `Failed to load dashboard data: ${err.message}`, type: "error" });
