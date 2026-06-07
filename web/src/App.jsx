@@ -117,7 +117,7 @@ export default function App() {
       setDietReminders(mealReminders.content || []);
       setCompliance(dietScore);
     } catch (err) {
-      setAlert({ text: `Failed to load dashboard data: ${err.message}`, type: "error" });
+      setAlert({ text: `Failed to load dashboard data: ${err.name}: ${err.message} | Stack: ${err.stack}`, type: "error" });
     }
   }
 

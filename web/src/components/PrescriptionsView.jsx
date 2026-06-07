@@ -47,7 +47,7 @@ export default function PrescriptionsView({
       setSelectedFile(null);
       onRefresh();
     } catch (err) {
-      setAlert({ text: err.message, type: "error" });
+      setAlert({ text: `${err.name}: ${err.message} | Stack: ${err.stack}`, type: "error" });
     } finally {
       setUploading(false);
     }
